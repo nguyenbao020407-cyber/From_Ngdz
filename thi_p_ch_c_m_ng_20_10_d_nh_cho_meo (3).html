@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gửi Meo Xinh Yêu 💕 - 20/10 Special Card</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti & FontAwesome -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        meo: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                        cursive: ['"Dancing Script"', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Tối ưu hóa triệt để chống nảy & phóng to trên điện thoại */
+        *, *::before, *::after {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 40%, #fda4af 75%, #fff1f2 100%);
+            background-size: 200% 200%;
+            animation: gradientMove 15s ease infinite;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.95);
+        }
+
+        /* Envelope 3D Styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        .envelope-wrapper {
+            transform-style: preserve-3d;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .envelope-flap {
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out;
+            z-index: 30;
+        }
+
+        .envelope-open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        /* Sakura Petals Canvas */
+        #petal-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Glow animation for card */
+        @keyframes heartGlow {
+            0%, 100% {
+                box-shadow: 0 0 25px rgba(244, 63, 94, 0.3), 0 0 50px rgba(251, 113, 133, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 45px rgba(244, 63, 94, 0.5), 0 0 70px rgba(251, 113, 133, 0.35);
+            }
+        }
+
+        .heart-glow {
+            animation: heartGlow 3s infinite ease-in-out;
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(3deg); }
+        }
+        .floating { animation: float 3.5s ease-in-out infinite; }
+
+        @keyframes pulseSlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .pulse-slow { animation: pulseSlow 2s ease-in-out infinite; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #ffe4e6; }
+        ::-webkit-scrollbar-thumb { background: #fb7185; border-radius: 10px; }
+
+        /* Animated Hearts Flying from Black Cat to White Cat */
+        @keyframes heartFlyLeftToRight {
+            0% {
+                transform: translate(0, 0) scale(0.4);
+                opacity: 0;
+            }
+            30% {
+                opacity: 1;
+                transform: translate(30px, -15px) scale(1.1);
+            }
+            70% {
+                opacity: 1;
+                transform: translate(70px, -5px) scale(1);
+            }
+            100% {
+                transform: translate(110px, 10px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        .heart-stream-1 { animation: heartFlyLeftToRight 1.6s infinite linear; }
+        .heart-stream-2 { animation: heartFlyLeftToRight 1.6s infinite linear 0.4s; }
+        .heart-stream-3 { animation: heartFlyLeftToRight 1.6s infinite linear 0.8s; }
+        .heart-stream-4 { animation: heartFlyLeftToRight 1.6s infinite linear 1.2s; }
+
+        /* Animation cho hiệu ứng +1 nảy lên khi bấm nút 207 */
+        @keyframes popUpPlus {
+            0% { transform: translate(-50%, 0) scale(0.6); opacity: 1; }
+            100% { transform: translate(-50%, -40px) scale(1.4); opacity: 0; }
+        }
+        .plus-one-anim {
+            animation: popUpPlus 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 font-sans relative selection:bg-rose-200 selection:text-rose-800">
+
+    <!-- Audio HTML5 MP3 Catbox -->
+    <audio id="bgMusic" loop src="https://files.catbox.moe/zepmnj.mp3" preload="auto"></audio>
+
+    <!-- Canvas Mưa Hoa Falling Sakura/Roses -->
+    <canvas id="petal-canvas"></canvas>
+
+    <!-- Header Bar -->
+    <header class="fixed top-0 left-0 right-0 z-40 px-4 py-3 bg-white/80 backdrop-blur-md border-b border-rose-200 shadow-xs flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <span class="text-2xl floating">🌸</span>
+            <span class="font-bold text-lg bg-gradient-to-r from-rose-600 via-pink-600 to-red-600 bg-clip-text text-transparent font-serif">
+                20/10 Special Card
+            </span>
+        </div>
+
+        <button id="music-btn" onclick="toggleMusic()" class="px-4 py-2 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white transition-all flex items-center space-x-2 shadow-md hover:shadow-lg active:scale-95 text-xs sm:text-sm font-semibold">
+            <i id="music-icon" class="fas fa-music"></i>
+            <span id="music-text">Bật Nhạc 🎶</span>
+        </button>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="pt-20 pb-16 px-4 max-w-2xl mx-auto min-h-screen flex flex-col justify-center items-center relative z-20">
+
+        <!-- STAGE 1: ENVELOPE UNBOXING -->
+        <div id="envelope-stage" class="w-full flex flex-col items-center justify-center transition-all duration-700 my-auto">
+            <div class="text-center mb-8 floating">
+                <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/95 border border-rose-300 text-rose-600 text-xs sm:text-sm font-bold shadow-xs mb-3">
+                    <span>✨</span> Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10 <span>✨</span>
+                </span>
+                <h1 class="text-3xl sm:text-4xl font-serif font-bold text-rose-900 leading-tight">
+                    Có 1 món quà gửi tới<br><span class="text-4xl sm:text-5xl font-cursive text-rose-600">Meo Xinh Yêu 💕</span>
+                </h1>
+                <p class="text-xs sm:text-sm text-rose-700 mt-2">Bấm vào phong thư để mở thiệp nha!</p>
+            </div>
+
+            <!-- Envelope Component -->
+            <div onclick="openEnvelope()" class="perspective-1000 cursor-pointer group relative w-72 sm:w-80 h-48 sm:h-52 my-4">
+                <div id="envelope" class="envelope-wrapper relative w-full h-full bg-rose-200 rounded-2xl shadow-2xl border-2 border-rose-300 flex items-center justify-center transition-all duration-500 group-hover:scale-105 group-hover:rotate-1">
+                    <div class="envelope-flap absolute top-0 left-0 right-0 h-28 bg-rose-300 rounded-t-2xl border-b-2 border-rose-400/50"></div>
+                    
+                    <div class="absolute z-40 w-16 h-16 bg-gradient-to-tr from-rose-600 to-pink-500 rounded-full shadow-lg border-2 border-white flex items-center justify-center text-white text-2xl pulse-slow">
+                        💖
+                    </div>
+
+                    <div class="absolute inset-x-0 h-6 bg-rose-300/60 top-1/2 -translate-y-1/2"></div>
+                    <div class="absolute inset-y-0 w-6 bg-rose-300/60 left-1/2 -translate-x-1/2"></div>
+
+                    <div class="absolute bottom-3 text-rose-700 font-serif font-bold text-sm tracking-widest uppercase flex items-center gap-1">
+                        <span>💌</span> FOR: MEO XINH YÊU 💕
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-xs text-rose-600 font-semibold animate-bounce mt-4 flex items-center gap-1">
+                <i class="fas fa-hand-pointer"></i> Chạm nhẹ để mở thiệp
+            </p>
+        </div>
+
+
+        <!-- STAGE 2: MAIN CARD CONTENT -->
+        <div id="card-stage" class="w-full hidden transition-all duration-1000 opacity-0 transform translate-y-8">
+
+            <div class="text-center mb-6">
+                <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/90 border border-rose-300 text-rose-600 text-xs font-bold shadow-xs mb-2">
+                    <span class="text-amber-400">✨</span> Happy Vietnamese Women's Day <span class="text-amber-400">✨</span>
+                </span>
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-rose-900 leading-tight">
+                    Chúc Mừng Ngày 20/10 Meo xinh yêu 💕
+                </h1>
+            </div>
+
+            <!-- Glass Card Container -->
+            <div class="w-full glass-card rounded-3xl shadow-2xl p-6 sm:p-8 heart-glow relative overflow-hidden">
+                
+                <div class="absolute -top-12 -left-12 w-36 h-36 bg-pink-300/40 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -bottom-12 -right-12 w-36 h-36 bg-rose-400/30 rounded-full blur-2xl pointer-events-none"></div>
+
+                <div class="flex flex-col items-center text-center space-y-6">
+                    
+                    <!-- Khung Ảnh Meo Cố Định Hoàn Toàn -->
+                    <div class="relative group">
+                        <div class="w-56 sm:w-64 h-auto rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-rose-100 relative z-10 flex items-center justify-center">
+                            <img id="meoPhoto" src="https://files.catbox.moe/pa1wy6.jpg" alt="Meo xinh yêu" class="w-full h-auto object-cover rounded-xl" />
+                        </div>
+
+                        <div class="absolute -inset-2 bg-gradient-to-r from-rose-400 via-pink-400 to-red-400 rounded-2xl blur-md opacity-70"></div>
+                        <span class="absolute -bottom-3 -right-3 z-20 text-3xl floating">💖</span>
+                        <span class="absolute -top-3 -left-3 z-20 text-3xl floating" style="animation-delay: 1s;">🌸</span>
+                    </div>
+
+                    <div>
+                        <h2 class="text-3xl sm:text-4xl font-cursive font-bold text-rose-700">
+                            Meo xinh yêu💕
+                        </h2>
+                    </div>
+
+                    <!-- Lời Chúc Chi Tiết -->
+                    <div class="relative w-full max-w-lg bg-rose-50/90 p-5 sm:p-6 rounded-2xl border border-rose-200 shadow-inner">
+                        <i class="fas fa-quote-left text-rose-300 text-2xl absolute top-3 left-3 opacity-60"></i>
+                        
+                        <p id="typewriter-text" class="text-slate-700 leading-relaxed font-sans text-base sm:text-lg font-medium px-3 py-2 min-h-[120px] flex items-center justify-center">
+                            <!-- Typewriter JS điền lời chúc -->
+                        </p>
+
+                        <i class="fas fa-quote-right text-rose-300 text-2xl absolute bottom-3 right-3 opacity-60"></i>
+                    </div>
+
+                    <!-- 4 BUTTONS TƯƠNG TÁC -->
+                    <div class="w-full max-w-md space-y-3 pt-2">
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="triggerLoveFireworks()" class="py-3 px-4 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center justify-center space-x-1">
+                                <span>🎉 Bắn Pháo Hoa Tim</span>
+                            </button>
+                            <button onclick="openGiftModal()" class="py-3 px-4 rounded-xl bg-gradient-to-r from-amber-400 to-rose-400 hover:from-amber-500 hover:to-rose-500 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center justify-center space-x-1">
+                                <span>🎁 Hộp Quà 20/10</span>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="drawFortuneCard()" class="py-3 px-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center justify-center space-x-1">
+                                <span>🥠 Rút Quẻ May Mắn</span>
+                            </button>
+                            <!-- NÚT 207 BẤM - ĐÃ TỐI ƯU CỰC MƯỢT TRÊN MOBILE -->
+                            <button id="surprise-counter-btn" onclick="clickSurpriseBtn(event)" class="relative overflow-hidden py-3 px-3 rounded-xl bg-gradient-to-r from-amber-400 via-rose-400 to-pink-500 hover:from-amber-500 hover:to-pink-600 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center space-x-1 border border-rose-200">
+                                <span id="btn-click-effect-container" class="absolute inset-0 pointer-events-none"></span>
+                                <span id="surprise-btn-text" class="relative z-10 text-center leading-tight">🎁✨ Bấm vào đây sẽ có bất ngờ (0/207)</span>
+                                <div id="progress-bar" class="absolute left-0 bottom-0 top-0 bg-white/35 transition-all duration-75" style="width: 0%;"></div>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- TOAST THÔNG BÁO MỐC 50, 100, 150, 200 -->
+    <div id="milestone-toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-500 transform -translate-y-10 opacity-0 scale-90">
+        <div class="bg-white/95 backdrop-blur-md px-6 py-3 rounded-2xl border-2 border-rose-400 shadow-2xl flex items-center gap-3">
+            <span id="milestone-emoji" class="text-3xl floating">🐱</span>
+            <div class="text-left">
+                <h4 id="milestone-title" class="text-sm font-bold text-rose-800">Cố lên Meo ơi! 🎉</h4>
+                <p id="milestone-desc" class="text-xs text-rose-600 font-medium">Đã đạt mốc 50/207 rồi đấy!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL HỘP QUÀ -->
+    <div id="gift-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-all duration-300 opacity-0">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full text-center relative border-4 border-rose-300 shadow-2xl transform scale-90 transition-all duration-300" id="gift-modal-card">
+            <button onclick="closeGiftModal()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 text-rose-600 floating">
+                🎁
+            </div>
+
+            <h3 class="text-2xl font-serif font-bold text-rose-900 mb-1">Phiếu Quà Tặng 20/10 Đặc Biệt</h3>
+            <p class="text-xs text-rose-600 font-semibold mb-4">Dành riêng cho Meo xinh yêu 💕</p>
+
+            <div class="bg-gradient-to-r from-rose-50 to-pink-50 p-4 rounded-2xl border border-rose-200 text-left space-y-2 mb-5 shadow-inner">
+                <div class="flex items-center gap-2 text-sm text-slate-700 font-medium">
+                    <span class="text-rose-500">✨</span> 1x Buổi hẹn hò đi ăn ngon & đi chơi tùy thích
+                </div>
+                <div class="flex items-center gap-2 text-sm text-slate-700 font-medium">
+                    <span class="text-rose-500">✨</span> 100x Quyền cưng chiều và nhường nhịn Meo tuyệt đối
+                </div>
+                <div class="flex items-center gap-2 text-sm text-slate-700 font-medium">
+                    <span class="text-rose-500">✨</span> Vô hạn tình yêu thương & ôm ấm áp mỗi ngày
+                </div>
+            </div>
+
+            <button onclick="acceptCoupon()" class="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold text-sm shadow-md hover:shadow-lg active:scale-95 transition">
+                Nhận Quà Ngay 💕
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL QUẺ MAY MẮN -->
+    <div id="fortune-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-all duration-300 opacity-0">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full text-center relative border-4 border-purple-300 shadow-2xl transform scale-90 transition-all duration-300" id="fortune-modal-card">
+            <button onclick="closeFortuneModal()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 text-purple-600 floating">
+                🥠
+            </div>
+
+            <h3 class="text-2xl font-serif font-bold text-purple-900 mb-2">Quẻ May Mắn 20/10</h3>
+            
+            <div class="bg-purple-50 p-5 rounded-2xl border border-purple-200 my-4 shadow-inner">
+                <p id="fortune-text" class="text-purple-900 font-medium text-base leading-relaxed"></p>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="drawFortuneCard()" class="flex-1 py-3 rounded-xl bg-purple-100 text-purple-700 font-bold text-xs sm:text-sm hover:bg-purple-200 active:scale-95 transition">
+                    Rút Quẻ Khác 🥠
+                </button>
+                <button onclick="closeFortuneModal()" class="flex-1 py-3 rounded-xl bg-purple-600 text-white font-bold text-xs sm:text-sm hover:bg-purple-700 active:scale-95 transition">
+                    Nhận Quẻ 💖
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 207 LẦN BẤM: MÈO ĐEN THẢ TIM MÈO TRẮNG -->
+    <div id="surprise-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-all duration-300 opacity-0">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full text-center relative border-4 border-rose-400 shadow-2xl transform scale-90 transition-all duration-300 overflow-hidden" id="surprise-modal-card">
+            <button onclick="closeSurpriseModal()" class="absolute top-3 right-3 z-20 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="inline-block px-3 py-1 rounded-full bg-rose-100 text-rose-600 text-xs font-bold mb-2">
+                🎉 Thử thách siêu kiên nhẫn 207/207!
+            </div>
+            
+            <h3 class="text-2xl font-serif font-bold text-rose-800 mb-1">Bất Ngờ Dành Riêng Cho Meo! 💕</h3>
+            <p class="text-xs text-slate-500 mb-3">Mèo Đen lấp lánh thả tim ngọt ngào dỗ dành Mèo Trắng xinh nè!</p>
+            
+            <!-- HOẠT HỌA SVG INLINE 2 CHÚ MÈO -->
+            <div class="bg-gradient-to-b from-rose-50 via-pink-50 to-purple-50 rounded-2xl p-4 my-2 border-2 border-rose-200 relative overflow-hidden flex items-center justify-between min-h-[210px]">
+                
+                <!-- MÈO ĐEN -->
+                <div class="flex flex-col items-center z-10 floating">
+                    <svg class="w-24 h-24 sm:w-28 sm:h-28 filter drop-shadow-md" viewBox="0 0 120 120">
+                        <polygon points="25,45 15,15 45,30" fill="#1e1b18" />
+                        <polygon points="28,42 20,20 42,32" fill="#fda4af" opacity="0.6" />
+                        <polygon points="95,45 105,15 75,30" fill="#1e1b18" />
+                        <polygon points="92,42 100,20 78,32" fill="#fda4af" opacity="0.6" />
+                        <ellipse cx="60" cy="55" rx="42" ry="35" fill="#1e1b18" />
+                        <circle cx="40" cy="50" r="10" fill="#f59e0b" />
+                        <circle cx="80" cy="50" r="10" fill="#f59e0b" />
+                        <circle cx="41" cy="50" r="7.5" fill="#0f172a" />
+                        <circle cx="79" cy="50" r="7.5" fill="#0f172a" />
+                        <circle cx="38" cy="47" r="3" fill="#ffffff" />
+                        <circle cx="43" cy="53" r="1.5" fill="#ffffff" />
+                        <circle cx="76" cy="47" r="3" fill="#ffffff" />
+                        <circle cx="81" cy="53" r="1.5" fill="#ffffff" />
+                        <polygon points="60,58 56,55 64,55" fill="#fb7185" />
+                        <path d="M 60,58 Q 54,65 48,60 M 60,58 Q 66,65 72,60" stroke="#fda4af" stroke-width="2.5" fill="none" stroke-linecap="round" />
+                        <circle cx="32" cy="62" r="6" fill="#f43f5e" opacity="0.5" />
+                        <circle cx="88" cy="62" r="6" fill="#f43f5e" opacity="0.5" />
+                        <line x1="20" y1="56" x2="5" y2="52" stroke="#fda4af" stroke-width="1.5" opacity="0.8" />
+                        <line x1="20" y1="62" x2="5" y2="64" stroke="#fda4af" stroke-width="1.5" opacity="0.8" />
+                        <line x1="100" y1="56" x2="115" y2="52" stroke="#fda4af" stroke-width="1.5" opacity="0.8" />
+                        <line x1="100" y1="62" x2="115" y2="64" stroke="#fda4af" stroke-width="1.5" opacity="0.8" />
+                        <path d="M 32,80 Q 60,115 88,80" fill="#1e1b18" />
+                        <circle cx="45" cy="78" r="7" fill="#2d2926" />
+                        <circle cx="75" cy="78" r="7" fill="#2d2926" />
+                        <path d="M 60,78 Q 60,70 54,70 Q 48,70 48,76 Q 48,84 60,92 Q 72,84 72,76 Q 72,70 66,70 Q 60,70 60,78 Z" fill="#f43f5e" />
+                    </svg>
+                    <span class="text-xs font-bold text-slate-100 bg-slate-900 px-2 py-0.5 rounded-full mt-1 border border-rose-300">Mèo Đen 🖤</span>
+                </div>
+
+                <!-- DÒNG THẢ TIM -->
+                <div class="flex-1 relative h-28 flex items-center justify-center overflow-hidden pointer-events-none">
+                    <span class="heart-stream-1 absolute text-2xl text-rose-500 font-bold">💖</span>
+                    <span class="heart-stream-2 absolute text-3xl text-pink-500 font-bold">💕</span>
+                    <span class="heart-stream-3 absolute text-2xl text-red-500 font-bold">💗</span>
+                    <span class="heart-stream-4 absolute text-xl text-rose-400 font-bold">💓</span>
+                </div>
+
+                <!-- MÈO TRẮNG -->
+                <div class="flex flex-col items-center z-10 floating" style="animation-delay: 0.5s;">
+                    <svg class="w-24 h-24 sm:w-28 sm:h-28 filter drop-shadow-md" viewBox="0 0 120 120">
+                        <polygon points="25,45 15,15 45,30" fill="#ffffff" stroke="#fbcfe8" stroke-width="2" />
+                        <polygon points="28,42 20,20 42,32" fill="#fecdd3" />
+                        <polygon points="95,45 105,15 75,30" fill="#ffffff" stroke="#fbcfe8" stroke-width="2" />
+                        <polygon points="92,42 100,20 78,32" fill="#fecdd3" />
+                        <ellipse cx="60" cy="55" rx="42" ry="35" fill="#ffffff" stroke="#f43f5e" stroke-width="1.5" />
+                        <circle cx="42" cy="52" r="7" fill="#1e293b" />
+                        <circle cx="78" cy="52" r="7" fill="#1e293b" />
+                        <circle cx="40" cy="50" r="2.5" fill="#ffffff" />
+                        <circle cx="76" cy="50" r="2.5" fill="#ffffff" />
+                        <polygon points="60,58 57,55 63,55" fill="#fb7185" />
+                        <path d="M 60,58 Q 55,64 50,60 M 60,58 Q 65,64 70,60" stroke="#475569" stroke-width="2" fill="none" stroke-linecap="round" />
+                        <ellipse cx="34" cy="62" rx="7" ry="5" fill="#fda4af" />
+                        <ellipse cx="86" cy="62" rx="7" ry="5" fill="#fda4af" />
+                        <line x1="20" y1="56" x2="5" y2="52" stroke="#cbd5e1" stroke-width="2" />
+                        <line x1="20" y1="62" x2="5" y2="64" stroke="#cbd5e1" stroke-width="2" />
+                        <line x1="100" y1="56" x2="115" y2="52" stroke="#cbd5e1" stroke-width="2" />
+                        <line x1="100" y1="62" x2="115" y2="64" stroke="#cbd5e1" stroke-width="2" />
+                        <path d="M 32,80 Q 60,115 88,80" fill="#ffffff" />
+                        <circle cx="48" cy="80" r="7" fill="#ffffff" stroke="#fecdd3" stroke-width="2" />
+                        <circle cx="72" cy="80" r="7" fill="#ffffff" stroke="#fecdd3" stroke-width="2" />
+                    </svg>
+                    <span class="text-xs font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full mt-1">Mèo Trắng Xinh 💕</span>
+                </div>
+
+            </div>
+
+            <div class="mt-4 p-3 bg-rose-50 rounded-xl border border-rose-200 text-center">
+                <p class="text-xs sm:text-sm font-semibold text-rose-800 leading-relaxed">
+                    "Kiên nhẫn bấm đủ 207 lần chứng tỏ Meo siêu ngoan và thương bạn meo lắm luôn! Mèo Đen gửi ngập tràn tim hồng cho Mèo Trắng nè. Chúc cho Meo lúc nào cũng vui vẻ, rạng rỡ, xinh đẹp và thương mèo nhiều hơn nữa nha! 💕✨"
+                </p>
+            </div>
+
+            <button onclick="closeSurpriseModal()" class="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold text-sm shadow-md hover:shadow-lg active:scale-95 transition">
+                Yêu Meo Nhất Trên Đời! 💖
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic Core -->
+    <script>
+        const greetingText = "Chúc Meo ngày 20/10 thật nhiều niềm vui, lúc nào cũng xinh đẹp, rạng rỡ nhé! Cảm ơn Meo vì dạo này đã biết quan tâm và ngoan hơn nhiều rồi đấy. Chúc cho bạn meo lúc nào cũng vui vẻ và thương mèo nhiều hơn nha!";
+        
+        let clickCount = 0;
+        const maxClicks = 207;
+
+        const milestones = {
+            50: {
+                title: "Khởi đầu tuyệt vời! 🎉 (50/207)",
+                desc: "Meo kiên nhẫn ghê! Tiếp tục bấm để khám phá bí mật nhé 🐾",
+                emoji: "🐱"
+            },
+            100: {
+                title: "Đã đi được gần nửa chặng đường! 💖 (100/207)",
+                desc: "100 tim gửi tới Meo xinh yêu nè, cố lên sắp đến đích rồi!",
+                emoji: "😸"
+            },
+            150: {
+                title: "Siêu hồi hộp! 🔥 (150/207)",
+                desc: "Chỉ còn một chút nữa thôi, món quà bất ngờ đang chờ Meo đó!",
+                emoji: "😻"
+            },
+            200: {
+                title: "CỰC KỲ GẦN RỒI! 🚨 (200/207)",
+                desc: "Chỉ còn 7 lần bấm nữa thôi! Chuẩn bị nhận siêu bất ngờ nha!!",
+                emoji: "🎉"
+            }
+        };
+
+        function showMilestoneToast(m) {
+            const toast = document.getElementById('milestone-toast');
+            document.getElementById('milestone-title').innerText = m.title;
+            document.getElementById('milestone-desc').innerText = m.desc;
+            document.getElementById('milestone-emoji').innerText = m.emoji;
+
+            toast.classList.remove('-translate-y-10', 'opacity-0', 'scale-90');
+            toast.classList.add('translate-y-0', 'opacity-100', 'scale-100');
+
+            confetti({ particleCount: 40, spread: 60, origin: { y: 0.2 } });
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100', 'scale-100');
+                toast.classList.add('-translate-y-10', 'opacity-0', 'scale-90');
+            }, 2500);
+        }
+
+        // Đếm số 207 mượt mà
+        function clickSurpriseBtn(e) {
+            if (clickCount >= maxClicks) {
+                openSurpriseModal();
+                return;
+            }
+
+            clickCount++;
+            
+            const btnText = document.getElementById('surprise-btn-text');
+            const progressBar = document.getElementById('progress-bar');
+            
+            btnText.innerText = `🎁✨ Bấm vào đây sẽ có bất ngờ (${clickCount}/${maxClicks})`;
+            progressBar.style.width = `${(clickCount / maxClicks) * 100}%`;
+
+            const container = document.getElementById('btn-click-effect-container');
+            const popEl = document.createElement('span');
+            popEl.className = 'absolute text-xs font-black text-rose-600 pointer-events-none plus-one-anim';
+            popEl.style.left = `${e.offsetX || 20}px`;
+            popEl.style.top = `${e.offsetY || 10}px`;
+            popEl.innerText = clickCount % 10 === 0 ? '💖 +1' : '+1';
+            container.appendChild(popEl);
+
+            setTimeout(() => popEl.remove(), 600);
+
+            if (milestones[clickCount]) {
+                showMilestoneToast(milestones[clickCount]);
+            }
+
+            if (clickCount >= maxClicks) {
+                btnText.innerText = `Mở Siêu Bất Ngờ Ngay! 🎁✨`;
+                triggerLoveFireworks();
+                setTimeout(() => {
+                    openSurpriseModal();
+                }, 400);
+            }
+        }
+
+        function openSurpriseModal() {
+            const modal = document.getElementById('surprise-modal');
+            const modalCard = document.getElementById('surprise-modal-card');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalCard.classList.remove('scale-90');
+            }, 10);
+            triggerLoveFireworks();
+        }
+
+        function closeSurpriseModal() {
+            const modal = document.getElementById('surprise-modal');
+            const modalCard = document.getElementById('surprise-modal-card');
+            modal.classList.add('opacity-0');
+            modalCard.classList.add('scale-90');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        const fortuneList = [
+            "🌸 Quẻ Sắc Đẹp: 20/10 này Meo sẽ cực kỳ xinh đẹp, nhận được ngập tràn quà tặng và niềm vui!",
+            "💖 Quẻ Tình Yêu: Meo lúc nào cũng ngoan và đáng yêu, luôn được bạn meo cưng chiều hết mực!",
+            "✨ Quẻ Rạng Rỡ: Càng ngày Meo càng tươi rạng rỡ, nụ cười làm bừng sáng cả ngày!",
+            "🎉 Quẻ Hạnh Phúc: Mọi điều ước của Meo trong ngày hôm nay sẽ sớm thành hiện thực!"
+        ];
+
+        let isMusicPlaying = false;
+
+        function openEnvelope() {
+            const env = document.getElementById('envelope');
+            env.classList.add('envelope-open');
+            
+            confetti({
+                particleCount: 60,
+                spread: 60,
+                origin: { y: 0.6 }
+            });
+
+            toggleMusic(true);
+
+            setTimeout(() => {
+                const envStage = document.getElementById('envelope-stage');
+                const cardStage = document.getElementById('card-stage');
+                
+                envStage.classList.add('opacity-0', 'scale-90');
+                setTimeout(() => {
+                    envStage.classList.add('hidden');
+                    cardStage.classList.remove('hidden');
+                    setTimeout(() => {
+                        cardStage.classList.remove('opacity-0', 'translate-y-8');
+                        startTypewriter();
+                        triggerLoveFireworks();
+                    }, 50);
+                }, 500);
+            }, 600);
+        }
+
+        function startTypewriter() {
+            const container = document.getElementById('typewriter-text');
+            container.innerHTML = "";
+            let i = 0;
+            function type() {
+                if (i < greetingText.length) {
+                    container.innerHTML += greetingText.charAt(i);
+                    i++;
+                    setTimeout(type, 30);
+                }
+            }
+            type();
+        }
+
+        function triggerLoveFireworks() {
+            const duration = 2.5 * 1000;
+            const animationEnd = Date.now() + duration;
+
+            (function frame() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return;
+
+                confetti({
+                    particleCount: 6,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#f43f5e', '#fb7185', '#ffffff', '#fda4af']
+                });
+                confetti({
+                    particleCount: 6,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#f43f5e', '#fb7185', '#ffffff', '#fda4af']
+                });
+
+                requestAnimationFrame(frame);
+            }());
+        }
+
+        function openGiftModal() {
+            const modal = document.getElementById('gift-modal');
+            const modalCard = document.getElementById('gift-modal-card');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalCard.classList.remove('scale-90');
+            }, 10);
+            confetti({ particleCount: 70, spread: 70, origin: { y: 0.5 } });
+        }
+
+        function closeGiftModal() {
+            const modal = document.getElementById('gift-modal');
+            const modalCard = document.getElementById('gift-modal-card');
+            modal.classList.add('opacity-0');
+            modalCard.classList.add('scale-90');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function acceptCoupon() {
+            closeGiftModal();
+            triggerLoveFireworks();
+            alert("💖 Đã ghi nhận! Phiếu quà tặng 20/10 này có hiệu lực vô thời hạn dành cho Meo xinh yêu nha!");
+        }
+
+        function drawFortuneCard() {
+            const modal = document.getElementById('fortune-modal');
+            const modalCard = document.getElementById('fortune-modal-card');
+            const textEl = document.getElementById('fortune-text');
+            
+            const randomFortune = fortuneList[Math.floor(Math.random() * fortuneList.length)];
+            textEl.innerText = randomFortune;
+
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modalCard.classList.remove('scale-90');
+                }, 10);
+            }
+            confetti({ particleCount: 40, spread: 60 });
+        }
+
+        function closeFortuneModal() {
+            const modal = document.getElementById('fortune-modal');
+            const modalCard = document.getElementById('fortune-modal-card');
+            modal.classList.add('opacity-0');
+            modalCard.classList.add('scale-90');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function toggleMusic(forcePlay = false) {
+            const audio = document.getElementById('bgMusic');
+            const musicIcon = document.getElementById('music-icon');
+            const musicText = document.getElementById('music-text');
+
+            if (isMusicPlaying && !forcePlay) {
+                audio.pause();
+                musicIcon.className = "fas fa-music";
+                musicText.innerText = "Bật Nhạc 🎶";
+                isMusicPlaying = false;
+            } else {
+                audio.play().then(() => {
+                    musicIcon.className = "fas fa-pause";
+                    musicText.innerText = "Tắt Nhạc 🎵";
+                    isMusicPlaying = true;
+                }).catch(err => {
+                    console.log("Audio autoplay prevented: ", err);
+                });
+            }
+        }
+
+        // Mưa hoa Sakura
+        const petalCanvas = document.getElementById('petal-canvas');
+        const ctx = petalCanvas.getContext('2d');
+        let petals = [];
+
+        function resizeCanvas() {
+            petalCanvas.width = window.innerWidth;
+            petalCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        for (let i = 0; i < 30; i++) {
+            petals.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                size: Math.random() * 8 + 8,
+                speedY: Math.random() * 1.2 + 0.6,
+                speedX: Math.random() * 0.8 - 0.4,
+                angle: Math.random() * 360,
+                spin: (Math.random() - 0.5) * 1.5,
+                color: Math.random() > 0.5 ? '#fda4af' : '#fecdd3'
+            });
+        }
+
+        function drawPetal(x, y, size, angle, color) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate((angle * Math.PI) / 180);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(-size, -size / 2, -size, size, 0, size * 1.5);
+            ctx.bezierCurveTo(size, size, size, -size / 2, 0, 0);
+            ctx.fillStyle = color;
+            ctx.globalAlpha = 0.75;
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function animatePetals() {
+            ctx.clearRect(0, 0, petalCanvas.width, petalCanvas.height);
+
+            petals.forEach(p => {
+                p.y += p.speedY;
+                p.x += Math.sin(p.y * 0.01) + p.speedX;
+                p.angle += p.spin;
+
+                if (p.y > window.innerHeight + 20) {
+                    p.y = -20;
+                    p.x = Math.random() * window.innerWidth;
+                }
+
+                drawPetal(p.x, p.y, p.size, p.angle, p.color);
+            });
+
+            requestAnimationFrame(animatePetals);
+        }
+
+        window.onload = function() {
+            animatePetals();
+        };
+    </script>
+</body>
+</html>
